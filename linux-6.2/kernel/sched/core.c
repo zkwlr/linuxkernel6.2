@@ -6487,6 +6487,10 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
  *
  * WARNING: must be called with preemption disabled!
  */
+
+// hw1
+int sched_index = 0;
+// hw1
 static void __sched notrace __schedule(unsigned int sched_mode)
 {
 	struct task_struct *prev, *next;
@@ -6499,7 +6503,29 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
 	prev = rq->curr;
+	// hw1
+	// 부팅시간 기준 몇 ms 이후 task가 실행되는지 구하기 위한 변수
+	unsigned long now = get_jiffies_64();
+	unsigned long now_in_ms = jiffies_to_msecs(now);
+	ktime_t boottime = ktime_get_boottime();
+	unsigned long bootimems = ktime_to_ms(boottime);
+	unsigned long task_time = now_in_ms - bootimems;
+	// 현재 스케줄러가 개입하는 CPU 번호 저장
+    int cpu = smp_processor_id();
+	// 현재 cpu의 rq에서 실행되는 task 디스크립터를 저장
+	struct task_struct *task = rq->curr;
+	const char *task_name1 = task->comm;
+	// hw1
 
+	// hw1
+	schedule_info_list[sched_index].cpu = cpu;
+	strncpy(schedule_info_list[sched_index].task_name1, task_name1, TASK_COMM_LEN);
+	// schedule_info_list[sched_index].task_name = task->comm;
+	schedule_info_list[sched_index].pid = task->pid;
+	schedule_info_list[sched_index].prio = task->prio;
+	// schedule_info_list[sched_index].runtime = task_time;
+	// schedule_info_list[sched_index].sched_type = task->sched_class->name;
+	// hw1
 	schedule_debug(prev, !!sched_mode);
 
 	if (sched_feat(HRTICK) || sched_feat(HRTICK_DL))
@@ -6573,6 +6599,10 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	next = pick_next_task(rq, prev, &rf);
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
+
+	// hw1
+	sched_index = (sched_index + 1) % 20;
+	// hw1
 #ifdef CONFIG_SCHED_DEBUG
 	rq->last_seen_need_resched_ns = 0;
 #endif

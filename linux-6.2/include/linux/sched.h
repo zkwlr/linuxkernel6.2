@@ -734,6 +734,27 @@ struct kmap_ctrl {
 #endif
 };
 
+
+// hw1
+struct schedule_info {
+	unsigned long timestamp;
+	int cpu;
+	char task_name1[TASK_COMM_LEN];
+	pid_t pid;
+	int prio;
+	unsigned long runtime;
+	char *sched_type;
+	int ncpu;
+	char ntask_name1[TASK_COMM_LEN];
+	pid_t npid;
+	int nprio;
+	unsigned long nruntime;
+	char *nsched_type;
+};
+
+extern struct schedule_info schedule_info_list[20];
+// hw1
+
 struct task_struct {
 #ifdef CONFIG_THREAD_INFO_IN_TASK
 	/*
