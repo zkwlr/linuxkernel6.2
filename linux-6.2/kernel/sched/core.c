@@ -6510,8 +6510,6 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	ktime_t boottime = ktime_get_boottime();
 	unsigned long bootimems = ktime_to_ms(boottime);
 	unsigned long task_time = now_in_ms - bootimems;
-	// 현재 스케줄러가 개입하는 CPU 번호 저장
-    int cpu = smp_processor_id();
 	// 현재 cpu의 rq에서 실행되는 task 디스크립터를 저장
 	struct task_struct *task = rq->curr;
 	const char *task_name1 = task->comm;
