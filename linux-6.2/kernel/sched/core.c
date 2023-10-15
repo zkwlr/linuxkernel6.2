@@ -6489,6 +6489,8 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
  */
 
 // hw1
+struct schedule_info schedule_info_list[20];
+EXPORT_SYMBOL(schedule_info_list); // core.c에서 선언한 배열을 sched.h나 다른 모듈에서도 사용할 수 있도록 함
 int sched_index = 0;
 // hw1
 static void __sched notrace __schedule(unsigned int sched_mode)
@@ -6511,18 +6513,30 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	unsigned long bootimems = ktime_to_ms(boottime);
 	unsigned long task_time = now_in_ms - bootimems;
 	// 현재 cpu의 rq에서 실행되는 task 디스크립터를 저장
-	struct task_struct *task = rq->curr;
+	struct task_struct *task;
+	task = get_current();
 	const char *task_name1 = task->comm;
+
+	struct schedule_info current_task_info; //task 정보를 담을 구조체 변수 선언해 sched_info_list에 저장
+	current_task_info.cpu = cpu;
+	strncpy(current_task_info.task_name1, current->comm, TASK_COMM_LEN);
+	current_task_info.pid = current->pid;
+	current_task_info.prio = current->prio;
+	current_task_info.runtime = task_time;
+	schedule_info_list[sched_index] = current_task_info;
 	// hw1
 
 	// hw1
-	schedule_info_list[sched_index].cpu = cpu;
-	strncpy(schedule_info_list[sched_index].task_name1, task_name1, TASK_COMM_LEN);
+	//schedule_info_list[sched_index].cpu = cpu;
+	//strncpy(schedule_info_list[sched_index].task_name1, task_name1, TASK_COMM_LEN);
 	// schedule_info_list[sched_index].task_name = task->comm;
-	schedule_info_list[sched_index].pid = task->pid;
-	schedule_info_list[sched_index].prio = task->prio;
+	//schedule_info_list[sched_index].pid = task->pid;
+	//schedule_info_list[sched_index].prio = task->prio;
 	// schedule_info_list[sched_index].runtime = task_time;
 	// schedule_info_list[sched_index].sched_type = task->sched_class->name;
+	// hw1
+	// hw1
+	sched_index = (sched_index + 1) % 20;
 	// hw1
 	schedule_debug(prev, !!sched_mode);
 
@@ -6598,9 +6612,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
 
-	// hw1
-	sched_index = (sched_index + 1) % 20;
-	// hw1
+	
 #ifdef CONFIG_SCHED_DEBUG
 	rq->last_seen_need_resched_ns = 0;
 #endif
