@@ -6523,6 +6523,24 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	current_task_info.pid = current->pid;
 	current_task_info.prio = current->prio;
 	current_task_info.runtime = task_time;
+	// sched_class type
+	if (current->sched_class == &fair_sched_class) {
+		current_task_info.sched_type = "CFS";
+	}
+	else if (current->sched_class == &rt_sched_class) {
+		current_task_info.sched_type = "RT";
+	}
+	else if (current->sched_class == &dl_sched_class) {
+		current_task_info.sched_type = "DL";
+	}
+	else if (current->sched_class == &idle_sched_class) {
+		current_task_info.sched_type = "IDLE";
+	}
+	else
+	{
+		current_task_info.sched_type = "STOP";
+	}
+	
 	// schedule_info_list[sched_index] = current_task_info;
 	// hw1
 
@@ -6614,6 +6632,23 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	current_task_info.npid = next->pid;
 	current_task_info.nprio = next->prio;
 	current_task_info.nruntime = task_time; //fix
+	// sched_class type
+	if (next->sched_class == &fair_sched_class) {
+		current_task_info.nsched_type = "CFS";
+	}
+	else if (next->sched_class == &rt_sched_class) {
+		current_task_info.nsched_type = "RT";
+	}
+	else if (next->sched_class == &dl_sched_class) {
+		current_task_info.nsched_type = "DL";
+	}
+	else if (next->sched_class == &idle_sched_class) {
+		current_task_info.nsched_type = "IDLE";
+	}
+	else {
+		current_task_info.nsched_type = "STOP";
+	}
+
 	if (sched_index < 20) { // 배열에 task_info가 가득 찰때까지 저장
 		schedule_info_list[sched_index] = current_task_info;
 		sched_index = sched_index + 1;

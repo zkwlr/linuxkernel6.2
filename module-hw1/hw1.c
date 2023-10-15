@@ -45,7 +45,7 @@ static int hello_seq_show(struct seq_file *s, void *v)
     seq_printf(s, "[System Programming Assignment #1]\n");
     seq_printf(s, "ID: 2019147542\n");
     seq_printf(s, "Name: Ha, Donghyun\n");
-    seq_printf(s, "CPU: %d\n", num_cpus);
+    seq_printf(s, "# CPU: %d\n", num_cpus);
     seq_printf(s, "--------------------------------------------------\n");
     for (int i = 0; i < 20; i++) {
         seq_printf(s, "schedule() trace #%d - CPU ", i);
@@ -54,16 +54,16 @@ static int hello_seq_show(struct seq_file *s, void *v)
         seq_printf(s, "PID: %d\n", schedule_info_list[i].pid);
         seq_printf(s, "Priority: %d\n", schedule_info_list[i].prio);
         seq_printf(s, "Start time (ms): %lu\n", schedule_info_list[i].runtime);
-        seq_printf(s, "Scheduler: \n");
+        seq_printf(s, "Scheduler: %s\n", schedule_info_list[i].sched_type);
         seq_printf(s, "->\n");
         seq_printf(s, "Command: %s\n", schedule_info_list[i].ntask_name1);
         seq_printf(s, "PID: %d\n", schedule_info_list[i].npid);
         seq_printf(s, "Priority: %d\n", schedule_info_list[i].nprio);
         seq_printf(s, "Start time (ms): %lu\n", schedule_info_list[i].nruntime);
-        seq_printf(s, "Scheduler: \n");
+        seq_printf(s, "Scheduler: %s\n", schedule_info_list[i].nsched_type);
         seq_printf(s, "--------------------------------------------------\n");
     }
-    
+    /*test code
     struct task_struct *p;
         p = get_current();   // 현재 프로세스를 얻는다
 
@@ -78,7 +78,8 @@ static int hello_seq_show(struct seq_file *s, void *v)
         seq_printf(s, "[Kernel Message] : Parent Process\n");
         seq_printf(s, "pid = %d\n", pa->pid); 
         seq_printf(s, "comm = %s\n", pa->comm);
-        seq_printf(s, "priority = %d\n", pa->prio);   
+        seq_printf(s, "priority = %d\n", pa->prio);
+    */    
 
     return 0;
 }
