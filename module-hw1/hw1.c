@@ -54,8 +54,13 @@ static int hello_seq_show(struct seq_file *s, void *v)
         seq_printf(s, "PID: %d\n", schedule_info_list[i].pid);
         seq_printf(s, "Priority: %d\n", schedule_info_list[i].prio);
         seq_printf(s, "Start time (ms): %lu\n", schedule_info_list[i].runtime);
-        seq_printf(s, "Scheduler: ");
+        seq_printf(s, "Scheduler: \n");
         seq_printf(s, "->\n");
+        seq_printf(s, "Command: %s\n", schedule_info_list[i].ntask_name1);
+        seq_printf(s, "PID: %d\n", schedule_info_list[i].npid);
+        seq_printf(s, "Priority: %d\n", schedule_info_list[i].nprio);
+        seq_printf(s, "Start time (ms): %lu\n", schedule_info_list[i].nruntime);
+        seq_printf(s, "Scheduler: \n");
         seq_printf(s, "--------------------------------------------------\n");
     }
     

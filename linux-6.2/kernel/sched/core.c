@@ -6523,7 +6523,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	current_task_info.pid = current->pid;
 	current_task_info.prio = current->prio;
 	current_task_info.runtime = task_time;
-	schedule_info_list[sched_index] = current_task_info;
+	// schedule_info_list[sched_index] = current_task_info;
 	// hw1
 
 	// hw1
@@ -6534,9 +6534,6 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	//schedule_info_list[sched_index].prio = task->prio;
 	// schedule_info_list[sched_index].runtime = task_time;
 	// schedule_info_list[sched_index].sched_type = task->sched_class->name;
-	// hw1
-	// hw1
-	sched_index = (sched_index + 1) % 20;
 	// hw1
 	schedule_debug(prev, !!sched_mode);
 
@@ -6611,7 +6608,24 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	next = pick_next_task(rq, prev, &rf);
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
+	
+	// hw1 //task 정보를 담을 구조체 변수 선언해 sched_info_list에 저장
+	strncpy(current_task_info.ntask_name1, next->comm, TASK_COMM_LEN);
+	current_task_info.npid = next->pid;
+	current_task_info.nprio = next->prio;
+	current_task_info.nruntime = task_time; //fix
+	if (sched_index < 20) { // 배열에 task_info가 가득 찰때까지 저장
+		schedule_info_list[sched_index] = current_task_info;
+		sched_index = sched_index + 1;
+	}
+	else {
+		for (int i = 0; i < 19; i++) { //가득 찼을 때
+			schedule_info_list[i] = schedule_info_list[i + 1]; // 앞으로 한칸씩 이동
+		}
+		schedule_info_list[19] = current_task_info; // 마지막에 최신 task_info 저장
+	}
 
+	// hw1
 	
 #ifdef CONFIG_SCHED_DEBUG
 	rq->last_seen_need_resched_ns = 0;
