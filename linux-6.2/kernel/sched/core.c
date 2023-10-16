@@ -6506,23 +6506,25 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	rq = cpu_rq(cpu);
 	prev = rq->curr;
 	// hw1
-	// 부팅시간 기준 몇 ms 이후 task가 실행되는지 구하기 위한 변수
-	unsigned long now = get_jiffies_64();
-	unsigned long now_in_ms = jiffies_to_msecs(now);
-	ktime_t boottime = ktime_get_boottime();
-	unsigned long bootimems = ktime_to_ms(boottime);
-	unsigned long task_time = now_in_ms - bootimems;
-	// 현재 cpu의 rq에서 실행되는 task 디스크립터를 저장
-	struct task_struct *task;
-	task = get_current();
-	const char *task_name1 = task->comm;
+	
+	// ktime_t boottime = ktime_get_boottime();
+	// unsigned long bootimems = ktime_to_ms(boottime);
+	// unsigned long run_time = current_start_time_ms - bootimems;
+	// // 현재 cpu의 rq에서 실행되는 task 디스크립터를 저장
+	// struct task_struct *task;
+	// task = get_current();
+	// const char *task_name1 = task->comm;
 
-	struct schedule_info current_task_info; //task 정보를 담을 구조체 변수 선언해 sched_info_list에 저장
+
+	struct schedule_info current_task_info; //현재와 다음 task 정보를 담을 구조체 변수 선언해 sched_info_list에 저장
 	current_task_info.cpu = cpu;
 	strncpy(current_task_info.task_name1, current->comm, TASK_COMM_LEN);
 	current_task_info.pid = current->pid;
 	current_task_info.prio = current->prio;
-	current_task_info.runtime = task_time;
+	// 부팅시간 기준 몇 ms 이후 task가 실행되는지 구하기 위한 변수
+	unsigned long current_start_time_ms = current->start_boottime / 1000000; //ns를 ms로 변환
+	current_task_info.runtime = current_start_time_ms;
+
 	// sched_class type
 	if (current->sched_class == &fair_sched_class) {
 		current_task_info.sched_type = "CFS";
@@ -6631,7 +6633,10 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	strncpy(current_task_info.ntask_name1, next->comm, TASK_COMM_LEN);
 	current_task_info.npid = next->pid;
 	current_task_info.nprio = next->prio;
-	current_task_info.nruntime = task_time; //fix
+	// 부팅시간 기준 몇 ms 이후 next task가 실행되는지 구하기 위한 변수
+	unsigned long ncurrent_start_time_ms = next->start_boottime / 1000000; //ns를 ms로 변환
+	current_task_info.nruntime = ncurrent_start_time_ms;
+
 	// sched_class type
 	if (next->sched_class == &fair_sched_class) {
 		current_task_info.nsched_type = "CFS";
@@ -6659,7 +6664,6 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 		}
 		schedule_info_list[19] = current_task_info; // 마지막에 최신 task_info 저장
 	}
-
 	// hw1
 	
 #ifdef CONFIG_SCHED_DEBUG

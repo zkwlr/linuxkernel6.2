@@ -4,7 +4,7 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <linux/sched.h>
-#include <linux/jiffies.h>
+#include <linux/time.h>
 
 #define PROC_NAME "hw1"
 
