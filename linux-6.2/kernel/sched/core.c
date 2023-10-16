@@ -6522,7 +6522,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	current_task_info.pid = current->pid;
 	current_task_info.prio = current->prio;
 	// 부팅시간 기준 몇 ms 이후 task가 실행되는지 구하기 위한 변수
-	unsigned long current_start_time_ms = current->start_boottime / 1000000; //ns를 ms로 변환
+	unsigned long long current_start_time_ms = current->start_boottime / 1000000; //ns를 ms로 변환
 	current_task_info.runtime = current_start_time_ms;
 
 	// sched_class type
@@ -6634,7 +6634,7 @@ static void __sched notrace __schedule(unsigned int sched_mode)
 	current_task_info.npid = next->pid;
 	current_task_info.nprio = next->prio;
 	// 부팅시간 기준 몇 ms 이후 next task가 실행되는지 구하기 위한 변수
-	unsigned long ncurrent_start_time_ms = next->start_boottime / 1000000; //ns를 ms로 변환
+	unsigned long long ncurrent_start_time_ms = next->start_boottime / 1000000; //ns를 ms로 변환
 	current_task_info.nruntime = ncurrent_start_time_ms;
 
 	// sched_class type

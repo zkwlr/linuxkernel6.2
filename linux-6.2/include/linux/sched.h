@@ -742,13 +742,13 @@ struct schedule_info {
 	char task_name1[TASK_COMM_LEN];
 	pid_t pid;
 	int prio;
-	unsigned long runtime;
+	unsigned long long runtime;
 	char *sched_type;
 	int ncpu;
 	char ntask_name1[TASK_COMM_LEN];
 	pid_t npid;
 	int nprio;
-	unsigned long nruntime;
+	unsigned long long nruntime;
 	char *nsched_type;
 };
 
