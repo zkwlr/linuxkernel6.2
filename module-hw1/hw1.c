@@ -63,24 +63,6 @@ static int hello_seq_show(struct seq_file *s, void *v)
         seq_printf(s, "Scheduler: %s\n", schedule_info_list[i].nsched_type);
         seq_printf(s, "--------------------------------------------------\n");
     }
-    /*test code
-    struct task_struct *p;
-        p = get_current();   // 현재 프로세스를 얻는다
-
-        // 자식과 부모의 pid, state, comm 을 얻는다
-        seq_printf(s, "[Kernel Message] : Currnet Process\n");
-        seq_printf(s, "pid = %d\n", p->pid); 
-        seq_printf(s, "comm = %s\n", p->comm);
-        seq_printf(s, "priority = %d\n", p->prio);  
-        struct task_struct *pa;
-        pa = p->real_parent;   // 현재 프로세스가 가르키는 부모 프로세스를 얻는다
-
-        seq_printf(s, "[Kernel Message] : Parent Process\n");
-        seq_printf(s, "pid = %d\n", pa->pid); 
-        seq_printf(s, "comm = %s\n", pa->comm);
-        seq_printf(s, "priority = %d\n", pa->prio);
-    */    
-
     return 0;
 }
 
